@@ -1,0 +1,6 @@
+team=ReplaceWithYourTeamNumber
+passkey=ReplaceWithYourPasskey
+cause=COVID-19
+password=ReplaceWithYourRemotePassword
+allow=127.0.0.1,X.X.X.X/24
+user=ReplaceWithYourUser
