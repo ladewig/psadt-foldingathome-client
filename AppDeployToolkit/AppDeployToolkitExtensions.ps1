@@ -38,10 +38,11 @@ Param (
 Function New-FAHScheduledTask {
     [CmdletBinding()]
     Param (
-        [string]$Name = "FAHClient_Start",
+        [string]$Name = 'FAHClient_Start',
         [string]$PathExe = "$envProgramFilesX86\FAHClient\FAHClient.exe",
         [string]$PathWorking = "$envProgramData\FAHClient",
-        [string]$User = "SYSTEM"
+        [string]$User = 'LocalSystem',
+        [string]$Password = ''
     )
 
     # Check path variables and add escaped quotation marks around path if spaces are found in the path.
@@ -59,15 +60,25 @@ Function New-FAHScheduledTask {
     # Create task trigger to run daily at midnight
     $TaskTrigger = New-ScheduledTaskTrigger -Daily -At 00:00
 
-    # Create task principal
-    $TaskPrincipal = New-ScheduledTaskPrincipal -UserId $User
+    # Create task principal. Check if account is a service account and specify the logontype as such, otherwise use password.
+    If ($User -match '^(NT AUTHORITY\\(LocalService|NetworkService)|LocalSystem)') {
+        $TaskPrincipal = New-ScheduledTaskPrincipal -UserId $User -LogonType ServiceAccount
+        $IsServiceAccount= $true
+    } Else {
+        $TaskPrincipal = New-ScheduledTaskPrincipal -UserId $User -LogonType Password
+        $IsServiceAccount= $false
+    }
     
     # Create default task settings set.
     $TaskSettings = New-ScheduledTaskSettingsSet
     
     # Create the task and register it
     $Task = New-ScheduledTask -Action $TaskAction -Principal $TaskPrincipal -Trigger $TaskTrigger -Settings $TaskSettings
-    $null = Register-ScheduledTask -TaskName $Name -InputObject $Task
+    IF ($IsServiceAccount) {
+        $null = Register-ScheduledTask -TaskName $Name -InputObject $Task
+    } else {
+        $null = Register-ScheduledTask -TaskName $Name -InputObject $Task -Password $Password
+    }
     
     # Export task to XML so that we can add a second trigger
     [xml]$TaskXml = Export-ScheduledTask -TaskName $Name

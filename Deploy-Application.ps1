@@ -134,6 +134,21 @@ Try {
 			New-Item -Path $FahDataDirectory -ItemType Directory
 		}
 
+		# If installed as a service, FAHClient runs as Local System by default. For security reasons, we want to use LocalService which runs as a standard user.
+		# Grant Local Service modify permissions on the data directory. https://win32.io/posts/How-To-Set-Perms-With-Powershell
+		$FahUserAccount = 'NT AUTHORITY\LocalService'
+		$FahUserPassword = '' # Password needs to be an empty string for Local Service when we modify the service later
+		$Rights = 'Modify'
+		$Inheritance = 'Containerinherit, ObjectInherit'
+		$Propagation = 'None'
+		$RuleType = 'Allow'
+
+		$Acl = Get-Acl $FahDataDirectory
+		$Perm = $FahUserAccount, $Rights, $Inheritance, $Propagation, $RuleType
+		$Rule = New-Object -TypeName System.Security.AccessControl.FileSystemAccessRule -ArgumentList $Perm
+		$Acl.SetAccessRule($Rule)
+		$Acl | Set-Acl -Path $FahDataDirectory
+
 		##*===============================================
 		##* INSTALLATION
 		##*===============================================
@@ -175,7 +190,7 @@ Try {
 		New-Shortcut -Path "$envCommonStartMenuPrograms\Folding@home\FAHViewer.lnk" -TargetPath "$FahClientFolder\FAHViewer.exe" -WorkingDirectory $FahDataDirectory -IconLocation "$FahClientFolder\FAHViewer.ico"
 		New-Shortcut -Path "$envCommonStartMenuPrograms\Folding@home\Web Control.lnk" -TargetPath "$FahClientFolder\FAHWebClient.url" -WorkingDirectory $FahDataDirectory -IconLocation "$FahClientFolder\FAHClient.ico"
 
-		# Download GPUs.txt because 7.6.9 fails to download the file.
+		# Download GPUs.txt because 7.6.9 failed to download the file. Fixed in later versions.
 		#Invoke-WebRequest -Uri "https://apps.foldingathome.org/GPUs.txt" -OutFile "$FahDataDirectory\GPUs.txt"
 
 		# Run FAHClient to do the following without downloading any work units
@@ -219,7 +234,8 @@ Try {
 			# A supported GPU was detected, run FAHClient using a scheduled task because a service doesn't have access to the GPU
 
 			# Create the scheduled task
-			New-FAHScheduledTask #-Name $TaskName -PathExe $FahClientExe -PathWorking $FahDataDirectory -User $TaskUser
+			$TaskName = 'FAHClient_Start'
+			New-FAHScheduledTask -Name $TaskName -PathExe $FahClientExe -PathWorking $FahDataDirectory -User $FahUserAccount -Password $FahUserPassword
 
 		} else {
 			# No supported GPU detected, run FAHClient as a service
@@ -227,6 +243,10 @@ Try {
 			# Install service
 			Execute-Process -Path $FahClientExe -Parameters "--install-service" -WindowStyle Hidden
 			
+			# Service is set to use Local System by default. For security reasons, change this to Local Service which runs as a standard user
+			$Service = Get-CimInstance Win32_Service -Filter "Name='FAHClient'"
+			$null = Invoke-CimMethod -InputObject $Service -MethodName Change -Arguments @{StartName=$FahUserAccount;StartPassword=$FahUserPassword}
+
 			# Pause before starting service
 			Start-Sleep -Seconds 3
 
