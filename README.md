@@ -7,7 +7,7 @@ The package will install and configure the client to run either as a service or 
 
 # Manifest
 * `AppDeployToolkit\` - Core files of PSADT. The only file that has been customized is `AppDeployToolkitExtensions.ps1` which contains the following custom functions:
-  * `New-FAHScheduledTask` - Creates a scheduled task to run the FAH client as the local system, starting at boot and also hourly (in case the client stops for any reason).
+  * `New-FAHScheduledTask` - Creates a scheduled task to run the FAH client as LocalService by default, starting at boot and also hourly (in case the client stops for any reason).
   * `Remove-FAHScheduledTask` - Removes the scheduled task for the client. Used when the package is uninstalled.
   * `Get-FAHUsername` - (optional) Returns a username to be used based on the department the machine belongs to. At my university, the department number is part of the computer name, and that is used to return a standardized department username based on an included departments.csv file.  If a username is specified in `defaults.txt`, this function is not used. Adapt or replace with your own function as necessary.
 * `Files\` - Download the [FAH client installer](https://foldingathome.org/start-folding/) and save to this folder. Current version is 7.6.13.
