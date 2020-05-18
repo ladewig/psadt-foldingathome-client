@@ -3,7 +3,7 @@ Deployment package for system install of the [Folding@home](https://foldingathom
 
 This deployment package is intended for deploying the client in an organization or enterprise using a standard configuration. The FAH client EULA states that "You may use this software on a computer system only if you own the system or have the written permission of the owner." Please only use this package in accordance with those terms.
 
-The package will install and configure the client to run either as a service or a scheduled task. The client is unable to use the GPU for folding when it runs as a service. If a supported GPU is found, the client will run as a scheduled task, otherwise the client will run as a service.
+The package will install and configure the client to run either as a service or a scheduled task. The client is unable to use the GPU for folding when it runs as a service. If a supported GPU is found, the client will run as a scheduled task, otherwise the client will run as a service.  The FAHClient data directory is stored in a central location under C:\ProgramData (aka %ProgramData%).
 
 # Manifest
 * `AppDeployToolkit\` - Core files of PSADT. The only file that has been customized is `AppDeployToolkitExtensions.ps1` which contains the following custom functions:
