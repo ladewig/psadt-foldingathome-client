@@ -212,7 +212,7 @@ Try {
 			}
 		}
 
-		# If username was not specified in defaults.txt, get username for system using cusotm function
+		# If username was not specified in defaults.txt, get username for system using custom function
 		If ($IsUserSet -eq $false) {
 			$FahUsername = Get-FahUsername
 			$FahOptions += "user=$FahUsername"
