@@ -1,5 +1,5 @@
 # psadt-foldingathome-client
-Deployment package for system install of the [Folding@home](https://foldingathome.org/) (FAH) client for Windows built using [PowerShell Application Deployment Toolkit (PSADT)](https://psappdeploytoolkit.com/)
+Deployment package for system install of the [Folding@home](https://foldingathome.org/) (FAH) client for Windows built using [PowerShell App Deployment Toolkit (PSADT)](https://psappdeploytoolkit.com/)
 
 This deployment package is intended for deploying the client in an organization or enterprise using a standard configuration. The FAH client EULA states that "You may use this software on a computer system only if you own the system or have the written permission of the owner." Please only use this package in accordance with those terms.
 
