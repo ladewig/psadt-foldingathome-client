@@ -74,7 +74,7 @@ Function New-FAHScheduledTask {
     
     # Create the task and register it
     $Task = New-ScheduledTask -Action $TaskAction -Principal $TaskPrincipal -Trigger $TaskTrigger -Settings $TaskSettings
-    IF ($IsServiceAccount) {
+    If ($IsServiceAccount) {
         $null = Register-ScheduledTask -TaskName $Name -InputObject $Task
     } else {
         $null = Register-ScheduledTask -TaskName $Name -InputObject $Task -Password $Password
@@ -100,7 +100,7 @@ Function New-FAHScheduledTask {
     $DurationXml.InnerText = "P1D"
     $null = $RepetitionXml.AppendChild($DurationXml)
 
-    # Add Repitition element to CalendarTrigger
+    # Add Repetition element to CalendarTrigger
     $null = $TaskXml.Task.Triggers.CalendarTrigger.AppendChild($RepetitionXml)
 
     # We want the task to start on boot, so create a BootTrigger element
