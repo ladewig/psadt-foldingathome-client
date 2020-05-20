@@ -60,6 +60,9 @@ Function New-FAHScheduledTask {
     # Create task trigger to run daily at midnight
     $TaskTrigger = New-ScheduledTaskTrigger -Daily -At 00:00
 
+    # Create default task settings set.
+    $TaskSettings = New-ScheduledTaskSettingsSet
+
     # Create task principal. Check if account is a service account and specify the logontype as such, otherwise use password.
     If ($User -match '^(NT AUTHORITY\\(LocalService|NetworkService)|LocalSystem)') {
         $TaskPrincipal = New-ScheduledTaskPrincipal -UserId $User -LogonType ServiceAccount
@@ -68,9 +71,6 @@ Function New-FAHScheduledTask {
         $TaskPrincipal = New-ScheduledTaskPrincipal -UserId $User -LogonType Password
         $IsServiceAccount= $false
     }
-    
-    # Create default task settings set.
-    $TaskSettings = New-ScheduledTaskSettingsSet
     
     # Create the task and register it
     $Task = New-ScheduledTask -Action $TaskAction -Principal $TaskPrincipal -Trigger $TaskTrigger -Settings $TaskSettings
@@ -109,7 +109,7 @@ Function New-FAHScheduledTask {
     # Add the BootTrigger element to the Triggers
     $null = $TaskXML.Task.Triggers.AppendChild($BootTriggerXml)
     
-    # Remove the existing task, then register a new task using the udpated definition
+    # Remove the existing task, then register a new task using the updated definition
     $null = Unregister-ScheduledTask -TaskName $Name -Confirm:$false
     $null = Register-ScheduledTask -TaskName $Name -Xml $TaskXml.OuterXml
 }

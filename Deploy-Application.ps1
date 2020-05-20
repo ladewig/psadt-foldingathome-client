@@ -237,6 +237,9 @@ Try {
 			$TaskName = 'FAHClient_Start'
 			New-FAHScheduledTask -Name $TaskName -PathExe $FahClientExe -PathWorking $FahDataDirectory -User $FahUserAccount -Password $FahUserPassword
 
+			# Start the scheduled task
+			Start-ScheduledTask -TaskName $TaskName
+
 		} else {
 			# No supported GPU detected, run FAHClient as a service
 			
@@ -296,7 +299,7 @@ Try {
 		$UninstallString = (Get-InstalledApplication -ProductCode 'FAHClient').UninstallString
 		Execute-Process -Path $UninstallString -Parameters "/S" -WindowStyle Hidden
 
-		# If scheduled taske exists for FAHClient, remove it.
+		# If scheduled task exists for FAHClient, remove it.
 		$TaskName = 'FAHClient_Start'
 
 		# Delete the scheduled task if it exists
