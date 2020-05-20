@@ -25,7 +25,7 @@ The package will install and configure the client to run either as a service or 
 2. Download FAH client installer [fah-installer_7.6.13_x86.exe](https://download.foldingathome.org/releases/public/release/fah-installer/windows-10-32bit/v7.6/fah-installer_7.6.13_x86.exe) and save to `Files\` folder.
 3. If you downloaded a different version of the installer than 7.6.13, make sure you update the variable declaration for `$appVersion` in `DeployApplication.ps1` to match the version you are using. 
 4. Edit defaults.txt in `SupportFiles\` to specify your configuration options. At a minimum, specify `user`, `team`, and `passkey` (optional but recommended). If you don't have a passkey, request one at https://apps.foldingathome.org/getpasskey. If you want to use different user names, do not set `user` here and continue to next step.
-5. (optional) If you plan to use different user names and are not setting `user` in `defaults.txt`, modify Get-FAHUsername custotm function as needed to meet your requirements.
+5. (optional) If you plan to use different user names and are not setting `user` in `defaults.txt`, modify the Get-FAHUsername custom  function as needed to meet your requirements.
 6. Deploy the client using your method of choice. Commands to install/uninstall are:
 
     * Deploy client\
