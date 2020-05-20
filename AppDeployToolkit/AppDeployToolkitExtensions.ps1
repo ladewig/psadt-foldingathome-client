@@ -100,7 +100,7 @@ Function New-FAHScheduledTask {
     $DurationXml.InnerText = "P1D"
     $null = $RepetitionXml.AppendChild($DurationXml)
 
-    # Add Repeition element to CalendarTrigger
+    # Add Repitition element to CalendarTrigger
     $null = $TaskXml.Task.Triggers.CalendarTrigger.AppendChild($RepetitionXml)
 
     # We want the task to start on boot, so create a BootTrigger element
