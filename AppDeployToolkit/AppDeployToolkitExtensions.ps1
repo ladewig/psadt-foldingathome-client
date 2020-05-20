@@ -90,7 +90,7 @@ Function New-FAHScheduledTask {
     # Create Repetition element
     $RepetitionXml = $TaskXml.CreateElement("Repetition", $TaskXmlNs)
 
-    # Create Internal element, set value to one hour, and append to Repetition
+    # Create Interval element, set value to one hour, and append to Repetition
     $IntervalXml = $TaskXml.CreateElement("Interval", $TaskXmlNs)
     $IntervalXml.InnerText = "PT1H"
     $null = $RepetitionXml.AppendChild($IntervalXml)
