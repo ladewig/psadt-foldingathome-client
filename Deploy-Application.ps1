@@ -182,7 +182,7 @@ Try {
 		$FahClientExe = "$FahClientFolder\FAHClient.exe"
 
 		# Add firewall rule allowing communication
-		New-NetFirewallRule -DisplayName "Allow Folding@home" -Direction Inbound -Action Allow -Program $FahClientExe 
+		New-NetFirewallRule -DisplayName "Allow Folding@home" -Direction Inbound -Action Allow -Program $FahClientExe -Profile Private, Domain
 
 		# Create Start Menu shortcuts. Installing FAHClient as SYSTEM does not create shortcuts
 		# Do not create Uninstall or Folding@home shortcuts since client will start automatically and uninstall should use this uninstaller.
